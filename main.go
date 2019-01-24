@@ -28,9 +28,9 @@ func save(fileName string, img image.Image) {
 
 func main() {
 
-	damageDisplayWidthOffset := 590
+	damageDisplayWidthOffset := 610
 	damageDisplayHeightOffset := 342
-	damageDisplayWidth := 105
+	damageDisplayWidth := 82
 	damageDisplayHeight := 30
 
 	displayIndex := 1
@@ -40,30 +40,38 @@ func main() {
 	bounds := screenshot.GetDisplayBounds(displayIndex)
 	myImg := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{damageDisplayWidth, damageDisplayHeight}})
 
+	lastComboDamage := 0
+
 	for {
 		img, err := screenshot.CaptureRect(bounds)
 
 		if err != nil {
 			panic(err)
 		}
-
-		for x := 0; x < damageDisplayWidth; x++ {
-			for y := 0; y < damageDisplayHeight; y++ {
+		out := ""
+		for y := 0; y < damageDisplayHeight; y++ {
+			for x := 0; x < damageDisplayWidth; x++ {
 				r, g, b, _ := img.At(x+damageDisplayWidthOffset, y+damageDisplayHeightOffset).RGBA()
 				// white is 65535
-				if r > 64000 && g > 64000 && b > 64000 {
+				if r > 55000 && g > 55000 && b > 55000 {
 					myImg.Set(x, y, color.RGBA{0, 0, 0, 255})
+					out += "1"
 				} else {
 					myImg.Set(x, y, color.RGBA{255, 255, 255, 255})
+					out += "0"
 				}
+				// myImg.Set(x, y, img.At(x+damageDisplayWidthOffset, y+damageDisplayHeightOffset))
 			}
+			out += "\n"
 		}
+		// log.Println(out)
 
-		comboDamage, err := imageToNumber(myImg)
+		comboDamage, err := shitImageToNumber(myImg)
 		if err != nil {
 			log.Printf("Error parsing image: %s\n", err.Error())
-		} else {
+		} else if comboDamage != lastComboDamage {
 			log.Printf("Combo Damage: %d", comboDamage)
+			lastComboDamage = comboDamage
 		}
 	}
 
