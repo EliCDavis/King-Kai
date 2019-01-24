@@ -6,7 +6,6 @@ import (
 	"image/png"
 	"log"
 	"os"
-	"time"
 
 	"github.com/kbinani/screenshot"
 )
@@ -39,26 +38,35 @@ func main() {
 	// n := screenshot.NumActiveDisplays()
 
 	bounds := screenshot.GetDisplayBounds(displayIndex)
+	bounds.Min = image.Point{
+		bounds.Min.X + damageDisplayWidthOffset,
+		bounds.Min.Y + damageDisplayHeightOffset,
+	}
+
+	bounds.Max = image.Point{
+		bounds.Min.X + damageDisplayWidth,
+		bounds.Min.Y + damageDisplayHeight,
+	}
 	myImg := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{damageDisplayWidth, damageDisplayHeight}})
 
 	lastComboDamage := 0
-	lastDraw := time.Now()
+	// lastDraw := time.Now()
+
 	for {
 		img, err := screenshot.CaptureRect(bounds)
-
 		if err != nil {
 			panic(err)
 		}
 		for y := 0; y < damageDisplayHeight; y++ {
 			for x := 0; x < damageDisplayWidth; x++ {
-				r, g, b, _ := img.At(x+damageDisplayWidthOffset, y+damageDisplayHeightOffset).RGBA()
+				r, g, b, _ := img.At(x, y).RGBA()
 				// white is 65535
 				if r > 55000 && g > 55000 && b > 55000 {
 					myImg.Set(x, y, color.RGBA{0, 0, 0, 255})
 				} else {
 					myImg.Set(x, y, color.RGBA{255, 255, 255, 255})
 				}
-				//myImg.Set(x, y, img.At(x+damageDisplayWidthOffset, y+damageDisplayHeightOffset))
+				// myImg.Set(x, y, img.At(x, y))
 			}
 		}
 		comboDamage, err := shitImageToNumber(myImg)
@@ -68,9 +76,9 @@ func main() {
 			log.Printf("Combo Damage: %d", comboDamage)
 			lastComboDamage = comboDamage
 		}
-		now := time.Now()
-		log.Printf("fps: %d", int(time.Second/now.Sub(lastDraw)))
-		lastDraw = now
+		// now := time.Now()
+		// log.Printf("fps: %d", int(time.Second/now.Sub(lastDraw)))
+		// lastDraw = now
 	}
 
 	// save("better.png", myImg)

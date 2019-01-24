@@ -23,7 +23,7 @@ var numbers []*number = []*number{
 }
 
 func shitImageToNumber(img image.Image) (int, error) {
-	// save("o.png", img)
+	//save("o.png", img)
 	value := 0
 	offset := img.Bounds().Dx() - 3
 	magnitude := 1
@@ -61,7 +61,7 @@ func shitImageToNumber(img image.Image) (int, error) {
 func imageToNumber(img image.Image) (int, error) {
 	// return 1, nil
 
-	save("o.png", img)
+	// save("o.png", img)
 	cmd := exec.Command("tesseract", "stdin", "stdout", "--psm", "8", "--oem", "1", "quiet")
 
 	stdin, err := cmd.StdinPipe()
