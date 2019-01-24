@@ -12,10 +12,9 @@ type number struct {
 	highlighted []image.Point
 	width       int
 	value       int
-	padding     int
 }
 
-func newNumber(fileName string, value int, padding int) *number {
+func newNumber(fileName string, value int) *number {
 	points := make([]image.Point, 0)
 	width := 0
 
@@ -44,7 +43,7 @@ func newNumber(fileName string, value int, padding int) *number {
 		log.Fatal(err)
 	}
 
-	return &number{points, width, value, padding}
+	return &number{points, width, value}
 }
 
 // if this number it valid, it returns how wide the number was

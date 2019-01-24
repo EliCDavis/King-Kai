@@ -10,20 +10,20 @@ import (
 )
 
 var numbers []*number = []*number{
-	newNumber("0.txt", 0, 3), // can happen as little as 3..
-	newNumber("1.txt", 1, 5),
-	newNumber("2.txt", 2, 4),
-	newNumber("3.txt", 3, 4),
-	newNumber("4.txt", 4, 4),
-	newNumber("5.txt", 5, 4),
-	newNumber("6.txt", 6, 3),
-	newNumber("7.txt", 7, 3),
-	newNumber("8.txt", 8, 4),
-	newNumber("9.txt", 9, 4),
+	newNumber("0.txt", 0), // can happen as little as 3..
+	newNumber("1.txt", 1),
+	newNumber("2.txt", 2),
+	newNumber("3.txt", 3),
+	newNumber("4.txt", 4),
+	newNumber("5.txt", 5),
+	newNumber("6.txt", 6),
+	newNumber("7.txt", 7),
+	newNumber("8.txt", 8),
+	newNumber("9.txt", 9),
 }
 
 func shitImageToNumber(img image.Image) (int, error) {
-	save("o.png", img)
+	// save("o.png", img)
 	value := 0
 	offset := img.Bounds().Dx() - 3
 	magnitude := 1
@@ -33,22 +33,22 @@ func shitImageToNumber(img image.Image) (int, error) {
 		var mostValidNumber *number = nil
 		mostValidPercentage := -1.0
 
-		for n := 0; n < len(numbers); n++ {
+		for p := 0; p < 6; p++ {
+			for n := 0; n < len(numbers); n++ {
+				valid := numbers[n].valid(img, offset-p)
 
-			valid := numbers[n].valid(img, offset)
-
-			if valid > mostValidPercentage {
-				mostValidPercentage = valid
-				mostValidNumber = numbers[n]
+				if valid > mostValidPercentage {
+					mostValidPercentage = valid
+					mostValidNumber = numbers[n]
+				}
 			}
-
 		}
 
 		if mostValidPercentage > .7 {
 			// log.Printf("Matched: %d\n", mostValidNumber.value)
 			value += mostValidNumber.value * magnitude
 			magnitude *= 10
-			offset -= mostValidNumber.width + mostValidNumber.padding
+			offset -= mostValidNumber.width + 3
 		} else {
 			break
 		}
