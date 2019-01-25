@@ -11,6 +11,11 @@ Work in progress...
  * Golang
  * FighterZ
  * 1920x1080 resolution, no lower *or* higher
+ * **Exactly** Python 3.6.1, any other version doesn't work
+
+ 1. Follow setup instructions for [PYXInput](https://github.com/bayangan1991/PYXInput)
+
+FighterZ can't be on fullscreen, must be on windowed fullscreen
 
 ## Notes..
 
@@ -23,4 +28,6 @@ Screen capturing only the regions I need instead of the entire screen increases 
 Here's a really cool design choice that FighterZ did but hurts me:
 
 > They put the combo counter behind the special effects. That means it can get hidden by the effects. But it's cool cause after you do a super move, and the dust settles, you see your resulting combo counter. This sucks for me though because I can't just look at a specific part of the screen to see if the combo ended.
+
+Any kind of keyboard emulation does not seem to work -_- Despite keyboard actually being able to work
 

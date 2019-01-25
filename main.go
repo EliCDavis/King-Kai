@@ -2,12 +2,9 @@ package main
 
 import (
 	"image"
-	"image/color"
 	"image/png"
 	"log"
 	"os"
-
-	"github.com/kbinani/screenshot"
 )
 
 /*
@@ -28,48 +25,19 @@ func save(fileName string, img image.Image) {
 
 func main() {
 
-	damageDisplayWidthOffset := 610
-	damageDisplayHeightOffset := 342
-	damageDisplayWidth := 82
-	damageDisplayHeight := 30
-
-	displayIndex := 0
-
 	// n := screenshot.NumActiveDisplays()
-
-	bounds := screenshot.GetDisplayBounds(displayIndex)
-	bounds.Min = image.Point{
-		bounds.Min.X + damageDisplayWidthOffset,
-		bounds.Min.Y + damageDisplayHeightOffset,
+	ourGame := newGame(false, 0)
+	ourController, err := newController()
+	if err != nil {
+		log.Printf("Error setting up controller %s", err.Error())
 	}
-
-	bounds.Max = image.Point{
-		bounds.Min.X + damageDisplayWidth,
-		bounds.Min.Y + damageDisplayHeight,
-	}
-	myImg := image.NewRGBA(image.Rectangle{image.Point{0, 0}, image.Point{damageDisplayWidth, damageDisplayHeight}})
 
 	lastComboDamage := 0
 	// lastDraw := time.Now()
-
 	for {
-		img, err := screenshot.CaptureRect(bounds)
-		if err != nil {
-			panic(err)
-		}
-		for y := 0; y < damageDisplayHeight; y++ {
-			for x := 0; x < damageDisplayWidth; x++ {
-				r, g, b, _ := img.At(x, y).RGBA()
-				// white is 65535
-				if r > 55000 && g > 55000 && b > 55000 {
-					myImg.Set(x, y, color.RGBA{0, 0, 0, 255})
-				} else {
-					myImg.Set(x, y, color.RGBA{255, 255, 255, 255})
-				}
-				// myImg.Set(x, y, img.At(x, y))
-			}
-		}
-		comboDamage, err := shitImageToNumber(myImg)
+		ourController.left()
+
+		comboDamage, err := ourGame.getDamage()
 		if err != nil {
 			log.Printf("Error parsing image: %s\n", err.Error())
 		} else if comboDamage != lastComboDamage {
