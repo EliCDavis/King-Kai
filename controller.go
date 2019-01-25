@@ -1,9 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"io"
-	"log"
 	"os/exec"
+	"time"
 )
 
 type controller struct {
@@ -27,8 +28,50 @@ func newController() (*controller, error) {
 	return &controller{cmd, stdin}, nil
 }
 
-func (c *controller) left() error {
-	_, err := c.stdin.Write([]byte("left\n"))
-	log.Println("written")
+func (c *controller) control(command string, duration int) error {
+	instructions := fmt.Sprintf("%s %d\n", command, duration)
+	_, err := c.stdin.Write([]byte(instructions))
+	//log.Printf("sent: %s", instructions)
 	return err
+}
+
+func (c *controller) controlWithRest(command string, duration int, rest int) error {
+	err := c.control(command, duration)
+	if err != nil {
+		return err
+	}
+	time.Sleep(time.Duration(rest) * time.Millisecond)
+	return nil
+}
+
+func (c *controller) left() error {
+	return c.control("left", 10)
+}
+
+func (c *controller) right() error {
+	return c.control("right", 10)
+}
+
+func (c *controller) down() error {
+	return c.control("down", 10)
+}
+
+func (c *controller) up() error {
+	return c.control("up", 10)
+}
+
+func (c *controller) special() error {
+	return c.controlWithRest("special", 100, 100)
+}
+
+func (c *controller) light() error {
+	return c.controlWithRest("light", 100, 100)
+}
+
+func (c *controller) medium() error {
+	return c.controlWithRest("medium", 100, 100)
+}
+
+func (c *controller) heavy() error {
+	return c.controlWithRest("heavy", 100, 100)
 }

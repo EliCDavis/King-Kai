@@ -19,16 +19,16 @@ var damageDisplayWidth = 82
 var damageDisplayHeight = 30
 
 var numbers []*number = []*number{
-	newNumber("0.txt", 0), // can happen as little as 3..
-	newNumber("1.txt", 1),
-	newNumber("2.txt", 2),
-	newNumber("3.txt", 3),
-	newNumber("4.txt", 4),
-	newNumber("5.txt", 5),
-	newNumber("6.txt", 6),
-	newNumber("7.txt", 7),
-	newNumber("8.txt", 8),
-	newNumber("9.txt", 9),
+	newNumber("numbers/0.txt", 0), // can happen as little as 3..
+	newNumber("numbers/1.txt", 1),
+	newNumber("numbers/2.txt", 2),
+	newNumber("numbers/3.txt", 3),
+	newNumber("numbers/4.txt", 4),
+	newNumber("numbers/5.txt", 5),
+	newNumber("numbers/6.txt", 6),
+	newNumber("numbers/7.txt", 7),
+	newNumber("numbers/8.txt", 8),
+	newNumber("numbers/9.txt", 9),
 }
 
 func newGame(debug bool, screen int) *game {

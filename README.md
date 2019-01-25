@@ -1,6 +1,6 @@
 # King Kai
 
-*Leave your warriors with King Kai and he'll teach them some new techniques (combos)*
+*Leave your warriors with King Kai and he'll teach them some new techniques*
 
 King Kia is a reinforcement learning agent meant to discover combos in Dragonball FighterZ
 
@@ -14,8 +14,11 @@ Work in progress...
  * **Exactly** Python 3.6.1, any other version doesn't work
 
  1. Follow setup instructions for [PYXInput](https://github.com/bayangan1991/PYXInput)
-
-FighterZ can't be on fullscreen, must be on windowed fullscreen
+ 2. Training settings:
+    * Turn off the ability to summon shenron
+    * Make sure the combo damage info is visible
+    * Quick health recovery
+ 3. FighterZ can't be on fullscreen, must be on windowed fullscreen
 
 ## Notes..
 

@@ -35,7 +35,10 @@ func main() {
 	lastComboDamage := 0
 	// lastDraw := time.Now()
 	for {
-		ourController.left()
+		err := ourController.light()
+		if err != nil {
+			log.Printf("Problem using our controller: %s", err.Error())
+		}
 
 		comboDamage, err := ourGame.getDamage()
 		if err != nil {
