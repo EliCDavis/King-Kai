@@ -20,6 +20,16 @@ Work in progress...
     * Quick health recovery
  3. FighterZ can't be on fullscreen, must be on windowed fullscreen
 
+### Testing
+
+Go to training mode and pick your characters, stage, and whatever. Once the stage has loaded unplug your controller. Pull up a console and type something like:
+
+```bash
+echo "100 attack light-down" | python .\controller.py
+```
+
+What you should see is your character do a 2L. If they don't do anything you failed to set up PYXInput correctly.
+
 ## Notes..
 
 Tesseract gave around 3-4 frames a second. Very spotty..

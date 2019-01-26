@@ -1,77 +1,65 @@
 package main
 
-import (
-	"fmt"
-	"io"
-	"os/exec"
-	"time"
+type ZCircle string
+
+const (
+	QuarterForward ZCircle = "quarterforward"
+	QuarterBack    ZCircle = "quarterback"
+	HalfForward    ZCircle = "halfforward" // We have to do this cause we never know our orientation -_-
+	HalfBack       ZCircle = "halfback"
 )
 
-type controller struct {
-	cmd   *exec.Cmd
-	stdin io.WriteCloser
-}
+type ZDirection string
 
-func newController() (*controller, error) {
-	cmd := exec.Command("python", ".\\controller.py")
+const (
+	Left    ZDirection = "left"
+	Right   ZDirection = "right"
+	Down    ZDirection = "down"
+	Up      ZDirection = "up"
+	Neutral ZDirection = "neutral"
+)
 
-	stdin, err := cmd.StdinPipe()
-	if err != nil {
-		return nil, err
-	}
+type ZAttack string
 
-	err = cmd.Start()
-	if err != nil {
-		return nil, err
-	}
+const (
+	Special ZAttack = "special"
+	Light   ZAttack = "light"
+	Medium  ZAttack = "medium"
+	Heavy   ZAttack = "heavy"
+)
 
-	return &controller{cmd, stdin}, nil
-}
+type ZBar string
 
-func (c *controller) control(command string, duration int) error {
-	instructions := fmt.Sprintf("%s %d\n", command, duration)
-	_, err := c.stdin.Write([]byte(instructions))
-	//log.Printf("sent: %s", instructions)
-	return err
-}
+const (
+	BarOne ZBar = "barone"
+	BarTwo ZBar = "bartwo"
+)
 
-func (c *controller) controlWithRest(command string, duration int, rest int) error {
-	err := c.control(command, duration)
-	if err != nil {
-		return err
-	}
-	time.Sleep(time.Duration(rest) * time.Millisecond)
-	return nil
-}
+type ZOtherInput string
 
-func (c *controller) left() error {
-	return c.control("left", 10)
-}
+const (
+	AssistOne  ZOtherInput = "assistone"
+	AssistTwo  ZOtherInput = "assisttwo"
+	DragonRush ZOtherInput = "dragonrush"
+	SuperDash  ZOtherInput = "superdash"
+	Vanish     ZOtherInput = "vanish"
+	Sparking   ZOtherInput = "sparking"
+)
 
-func (c *controller) right() error {
-	return c.control("right", 10)
-}
+type ZJump string
 
-func (c *controller) down() error {
-	return c.control("down", 10)
-}
+const (
+	JumpUp    ZJump = "up"
+	JumpRight ZJump = "right"
+	JumpLeft  ZJump = "left"
+)
 
-func (c *controller) up() error {
-	return c.control("up", 10)
-}
-
-func (c *controller) special() error {
-	return c.controlWithRest("special", 100, 100)
-}
-
-func (c *controller) light() error {
-	return c.controlWithRest("light", 100, 100)
-}
-
-func (c *controller) medium() error {
-	return c.controlWithRest("medium", 100, 100)
-}
-
-func (c *controller) heavy() error {
-	return c.controlWithRest("heavy", 100, 100)
+type controller interface {
+	attack(ZAttack, ZDirection) error
+	specialAttack(ZAttack, ZCircle) error
+	bar(ZBar, ZCircle) error
+	input(ZOtherInput) error
+	jump(ZJump) error
+	move(ZDirection) error
+	reset() error
 }

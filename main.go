@@ -27,7 +27,7 @@ func main() {
 
 	// n := screenshot.NumActiveDisplays()
 	ourGame := newGame(false, 0)
-	ourController, err := newController()
+	ourController, err := newPyController()
 	if err != nil {
 		log.Printf("Error setting up controller %s", err.Error())
 	}
@@ -35,7 +35,13 @@ func main() {
 	lastComboDamage := 0
 	// lastDraw := time.Now()
 	for {
-		err := ourController.light()
+		ourController.attack(Light, Neutral)
+		ourController.attack(Medium, Down)
+		ourController.attack(Medium, Neutral)
+		ourController.attack(Heavy, Down)
+		ourController.reset()
+		// err = ourController.attack(Light, Neutral)
+
 		if err != nil {
 			log.Printf("Problem using our controller: %s", err.Error())
 		}
@@ -51,7 +57,5 @@ func main() {
 		// log.Printf("fps: %d", int(time.Second/now.Sub(lastDraw)))
 		// lastDraw = now
 	}
-
-	// save("better.png", myImg)
 
 }
