@@ -1,4 +1,5 @@
 package main
 
-type kai struct {
+type Kai interface {
+	Train(numberOfEpisodes int) error
 }

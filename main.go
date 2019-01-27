@@ -26,36 +26,17 @@ func save(fileName string, img image.Image) {
 func main() {
 
 	// n := screenshot.NumActiveDisplays()
-	ourGame := newGame(false, 0)
+	ourGame := newOCRGame(false, 0)
 	ourController, err := newPyController()
 	if err != nil {
 		log.Printf("Error setting up controller %s", err.Error())
 	}
 
-	lastComboDamage := 0
-	// lastDraw := time.Now()
-	for {
-		ourController.attack(Light, Neutral)
-		ourController.attack(Medium, Down)
-		ourController.attack(Medium, Neutral)
-		ourController.attack(Heavy, Down)
-		ourController.reset()
-		// err = ourController.attack(Light, Neutral)
+	kingKai := NewKingKai(ourController, ourGame)
 
-		if err != nil {
-			log.Printf("Problem using our controller: %s", err.Error())
-		}
-
-		comboDamage, err := ourGame.getDamage()
-		if err != nil {
-			log.Printf("Error parsing image: %s\n", err.Error())
-		} else if comboDamage != lastComboDamage {
-			log.Printf("Combo Damage: %d", comboDamage)
-			lastComboDamage = comboDamage
-		}
-		// now := time.Now()
-		// log.Printf("fps: %d", int(time.Second/now.Sub(lastDraw)))
-		// lastDraw = now
+	err = kingKai.Train(100)
+	if err != nil {
+		log.Println("Issue training:\n\t" + err.Error())
 	}
 
 }

@@ -1,15 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
+	"log"
 	"os/exec"
 	"time"
 )
 
 type pyController struct {
-	cmd   *exec.Cmd
-	stdin io.WriteCloser
+	cmd    *exec.Cmd
+	stdin  io.WriteCloser
+	stdout io.ReadCloser
 }
 
 func newPyController() (*pyController, error) {
@@ -20,18 +23,29 @@ func newPyController() (*pyController, error) {
 		return nil, err
 	}
 
+	stout, err := cmd.StdoutPipe()
+	if err != nil {
+		return nil, err
+	}
+
 	err = cmd.Start()
 	if err != nil {
 		return nil, err
 	}
 
-	return &pyController{cmd, stdin}, nil
+	return &pyController{cmd, stdin, stout}, nil
+}
+
+func (c *pyController) everything() string {
+	buf := new(bytes.Buffer)
+	buf.ReadFrom(c.stdout)
+	return buf.String()
 }
 
 func (c *pyController) control(command string, duration int) error {
 	instructions := fmt.Sprintf("%d %s\n", duration, command)
 	_, err := c.stdin.Write([]byte(instructions))
-	//log.Printf("sent: %s", instructions)
+	log.Printf("sent: %s", instructions)
 	return err
 }
 
@@ -49,15 +63,15 @@ func (c *pyController) attack(attack ZAttack, direction ZDirection) error {
 }
 
 func (c *pyController) specialAttack(attack ZAttack, direction ZCircle) error {
-	return c.controlWithRest(fmt.Sprintf("special %s-%s", attack, direction), 100)
+	return c.controlWithRest(fmt.Sprintf("special %s-%s", attack, direction), 280)
 }
 
 func (c *pyController) bar(attack ZBar, direction ZCircle) error {
-	return c.controlWithRest(fmt.Sprintf("bar %s-%s", attack, direction), 100)
+	return c.controlWithRest(fmt.Sprintf("bar %s-%s", attack, direction), 280)
 }
 
-func (c *pyController) input(attack ZOtherInput) error {
-	return c.controlWithRest(fmt.Sprintf("other %s", attack), 100)
+func (c *pyController) command(attack ZCommand) error {
+	return c.controlWithRest(fmt.Sprintf("command %s", attack), 100)
 }
 
 func (c *pyController) jump(attack ZJump) error {
@@ -69,5 +83,5 @@ func (c *pyController) move(attack ZDirection) error {
 }
 
 func (c *pyController) reset() error {
-	return c.controlWithRest("reset", 100)
+	return c.controlWithRest("reset", 500)
 }

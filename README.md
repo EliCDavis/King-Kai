@@ -18,6 +18,7 @@ Work in progress...
     * Turn off the ability to summon shenron
     * Make sure the combo damage info is visible
     * Quick health recovery
+    * Make characters start with 7 bars
  3. FighterZ can't be on fullscreen, must be on windowed fullscreen
 
 ### Testing

@@ -31,19 +31,19 @@ const (
 type ZBar string
 
 const (
-	BarOne ZBar = "barone"
-	BarTwo ZBar = "bartwo"
+	BarOne ZBar = "one"
+	BarTwo ZBar = "two"
 )
 
-type ZOtherInput string
+type ZCommand string
 
 const (
-	AssistOne  ZOtherInput = "assistone"
-	AssistTwo  ZOtherInput = "assisttwo"
-	DragonRush ZOtherInput = "dragonrush"
-	SuperDash  ZOtherInput = "superdash"
-	Vanish     ZOtherInput = "vanish"
-	Sparking   ZOtherInput = "sparking"
+	AssistOne  ZCommand = "assistone"
+	AssistTwo  ZCommand = "assisttwo"
+	DragonRush ZCommand = "dragonrush"
+	SuperDash  ZCommand = "superdash"
+	Vanish     ZCommand = "vanish"
+	Sparking   ZCommand = "sparking"
 )
 
 type ZJump string
@@ -54,12 +54,13 @@ const (
 	JumpLeft  ZJump = "left"
 )
 
-type controller interface {
+type Controller interface {
 	attack(ZAttack, ZDirection) error
 	specialAttack(ZAttack, ZCircle) error
 	bar(ZBar, ZCircle) error
-	input(ZOtherInput) error
+	command(ZCommand) error
 	jump(ZJump) error
 	move(ZDirection) error
+	everything() string
 	reset() error
 }
