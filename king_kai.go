@@ -97,7 +97,12 @@ func (king *KingKai) Train(numberOfEpisodes int) error {
 	stateActionCount := make(map[string]int)
 	QPolicy := make(map[string]float64)
 
+	bestCombo := make([]Input, 0)
+	bestComboScore := 0
+
 	for curEpisode := 0; curEpisode < numberOfEpisodes; curEpisode++ {
+
+		combo := make([]Input, 0)
 
 		err := king.controls.reset()
 		if err != nil {
@@ -109,6 +114,7 @@ func (king *KingKai) Train(numberOfEpisodes int) error {
 
 		action := king.sampleActions(lastComboDamage, stateCount, QPolicy)
 		king.incrementStateActionCount(lastComboDamage, action, stateActionCount, QPolicy)
+		combo = append(combo, action)
 
 		saHash := king.stateActionHash(lastComboDamage, action)
 
@@ -143,19 +149,26 @@ func (king *KingKai) Train(numberOfEpisodes int) error {
 
 			action = action_prime
 			saHash = saHashPrime
+			combo = append(combo, action)
 
 			if reward > lastComboDamage {
 				lastComboDamage = reward
 			}
+
+			if reward > bestComboScore {
+				bestComboScore = reward
+				bestCombo = combo
+			}
 		}
 
-		comboDamage, err := king.screen.GetDamage()
-		if err != nil {
-			log.Printf("Error parsing image: %s\n", err.Error())
-		} else if comboDamage != lastComboDamage {
-			log.Printf("Combo Damage: %d", comboDamage)
-			lastComboDamage = comboDamage
+		log.Printf("Trained %d episodes\n", numberOfEpisodes)
+
+		for _, act := range bestCombo {
+			log.Printf("%s, ", act)
 		}
+
+		log.Printf("\n Damage Delt: %d", bestComboScore)
+
 		// now := time.Now()
 		// log.Printf("fps: %d", int(time.Second/now.Sub(lastDraw)))
 		// lastDraw = now

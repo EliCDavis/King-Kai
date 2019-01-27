@@ -34,7 +34,7 @@ func main() {
 
 	kingKai := NewKingKai(ourController, ourGame)
 
-	err = kingKai.Train(100)
+	err = kingKai.Train(2000)
 	if err != nil {
 		log.Println("Issue training:\n\t" + err.Error())
 	}

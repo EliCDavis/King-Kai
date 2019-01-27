@@ -71,7 +71,19 @@ func (c *pyController) bar(attack ZBar, direction ZCircle) error {
 }
 
 func (c *pyController) command(attack ZCommand) error {
-	return c.controlWithRest(fmt.Sprintf("command %s", attack), 100)
+	delay := 100
+
+	switch attack {
+	case SuperDash:
+		delay = 200
+		break
+
+	case DragonRush:
+		delay = 1500
+		break
+	}
+
+	return c.controlWithRest(fmt.Sprintf("command %s", attack), delay)
 }
 
 func (c *pyController) jump(attack ZJump) error {
